@@ -129,18 +129,17 @@ func (seg *Segmenter) LoadDictionary(files string) {
 
 //copy of LoadDictionary that loads from []byte instead of a file
 //Meant to be used with a data file compiled into the users project
-func (seg *Segmenter) LoadDictionaryByte(input []byte) {
+func (seg *Segmenter) LoadDictionaryByte(input string) {
 	seg.dict = NewDictionary()
 	var text string
 	var freqText string
 	var frequency int
 	var pos string
 
-	// 逐行读入分词
-	// Read line word by line
-	for _, line := range input {
+	scanner := bufio.NewScanner(strings.NewReader(input))
 
-		l := strings.Split(string(line), " ")
+	for scanner.Scan() {
+		l := strings.Split(scanner.Text(), " ")
 		size := len(l)
 
 		if size == 0 {
@@ -215,7 +214,7 @@ func (seg *Segmenter) LoadDictionaryByte(input []byte) {
 		}
 	}
 
-	log.Println("sego词典载入完毕")
+	log.Println("sego loaded dictionary from string")
 }
 
 // 对文本分词
